@@ -29,9 +29,11 @@ builder.Services
     .StartWithHost();    
 
 //mediator
-builder.Services.AddHandler<RandomWeatherForecastHandler>();
+builder.Services.AddHandler<OpenWeatherForecastHandler>();
 builder.Services.AddMediator();
 builder.Services.AddMediatorObserver<MediatorTelemetryObserver>();
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

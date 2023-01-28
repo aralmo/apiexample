@@ -9,7 +9,8 @@ public class RandomWeatherForecastHandler :
         new ForecastResponse(
             City: request.City,
             Date: request.Date,
-            TemperatureC: Random.Shared.Next(-20, 55)));
+            TemperatureMaxC: Random.Shared.Next(-20, 55),
+            TemperatureMinC: Random.Shared.Next(-20, 55)));
     
-    private record ForecastResponse(string City, DateOnly Date, int TemperatureC) : IWeatherForecastResponse;
+    private record ForecastResponse(string City, DateOnly Date, float TemperatureMinC,float TemperatureMaxC) : IWeatherForecastResponse;
 }
