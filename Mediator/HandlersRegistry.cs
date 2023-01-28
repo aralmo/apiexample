@@ -16,12 +16,11 @@ internal class HandlersRegistry
     private MethodInfo HandlerInvocation(Type consumerType)
         => consumerType.GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public)!;
 
-    internal (Type consumerType, MethodInfo handler) RegistrationFor(Type request, Type response)
+    internal (Type request, Type response,Type consumer, MethodInfo handler) RegistrationFor(Type request, Type response)
         => consumerTypes
             .Where(ct => 
                 ct.request.IsAssignableFrom(request) &&
                 ct.response.IsAssignableFrom(response))
-            .Select(ct => (ct.consumer,ct.handler))
             .FirstOrDefault();
             
                    

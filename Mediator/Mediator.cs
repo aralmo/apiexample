@@ -20,15 +20,15 @@ internal class Mediator : IMediator
     {
         var requestType = request.GetType();
         var registration = registry.RegistrationFor(requestType, typeof(TResponse));
-        var instance = provider.GetRequiredService(registration.consumerType);
+        var instance = provider.GetRequiredService(registration.consumer);
 
         RequestContext context = new()
         {
             Descriptor = new()
             {
-                HandlerType = registration.consumerType,
-                RequestType = requestType,
-                ResponseType = typeof(TResponse)
+                HandlerType = registration.consumer,
+                RequestType = registration.request,
+                ResponseType =registration.response
             }
         };
 
