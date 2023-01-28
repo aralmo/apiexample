@@ -8,8 +8,11 @@ public static class MediatorExtensions
     {
         services.AddSingleton<IMediator, Mediator.Mediator>();
         services.AddSingleton(registry);
-    }    
+    }
 
+    public static void AddMediatorObserver<TObserver>(this IServiceCollection services)
+        where TObserver: class, IMediatorRequestObserver
+        => services.AddSingleton<IMediatorRequestObserver, TObserver>();
     
     public static void AddHandler<TConsumer>(this IServiceCollection services)
         where TConsumer : IRequestHandler
