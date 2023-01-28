@@ -1,14 +1,15 @@
 using Mediator;
 
 public class RandomWeatherForecastHandler :
-    IRequestHandler<IWeatherForecastRequest, IWeatherForecastResponse>
+    RequestHandler<IWeatherForecastRequest, IWeatherForecastResponse>
 {
     //this could be a call to an api or we
-    public IWeatherForecastResponse Handle(IWeatherForecastRequest request)
-     => new ForecastResponse(
-        City: request.City,
-        Date: request.Date,
-        TemperatureC: Random.Shared.Next(-20, 55));
+    public override Task<IWeatherForecastResponse?> Handle(IWeatherForecastRequest request)
+     =>Task.FromResult((IWeatherForecastResponse?) 
+        new ForecastResponse(
+            City: request.City,
+            Date: request.Date,
+            TemperatureC: Random.Shared.Next(-20, 55)));
     
     private record ForecastResponse(string City, DateOnly Date, int TemperatureC) : IWeatherForecastResponse;
 }

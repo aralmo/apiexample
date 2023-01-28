@@ -16,11 +16,11 @@ internal class Mediator : IMediator
         this.requestObservers = requestObservers.ToArray();
     }
 
-    public TResponse RequestFor<TResponse>(IRequestFor<TResponse> request)
+    public async Task<TResponse?> RequestFor<TResponse>(IRequestFor<TResponse> request)
     {
         var requestType = request.GetType();
         var registration = registry.RegistrationFor(requestType, typeof(TResponse));
-        var instance = provider.GetRequiredService(registration.consumer);
+        var instance = provider.GetRequiredService(registration.consumer) as IRequestHandler;
 
         RequestContext context = new()
         {
@@ -40,7 +40,8 @@ internal class Mediator : IMediator
         Exception? exception = null;
         try
         {
-            response = (TResponse)registration.handler.Invoke(instance, new[] { request })!;
+
+            response = (TResponse?) await instance!.Handle(request);
             return response;
         }
         catch (Exception ex)

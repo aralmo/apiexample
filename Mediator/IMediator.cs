@@ -2,11 +2,17 @@ namespace Mediator;
 
 public interface IMediator
 {
-    TResponse RequestFor<TResponse>(IRequestFor<TResponse> request);
+    Task<TResponse?> RequestFor<TResponse>(IRequestFor<TResponse> request);
 }
 public interface IRequestFor<TResponse>{ }
-public interface IRequestHandler{}
-public interface IRequestHandler<TRequest, TResponse>:IRequestHandler
+public interface IRequestHandler{
+    Task<object?> Handle(object request);
+
+}
+public abstract class RequestHandler<TRequest, TResponse>:IRequestHandler
 {
-    abstract TResponse Handle(TRequest request);
+    async Task<object?> IRequestHandler.Handle(object request)
+    => await Handle((TRequest) request);
+
+    public abstract Task<TResponse?> Handle(TRequest request);
 }
