@@ -11,29 +11,24 @@ public static class MediatorExtensions
     }
 
     public static void AddMediatorObserver<TObserver>(this IServiceCollection services)
-        where TObserver: class, IMediatorRequestObserver
+        where TObserver : class, IMediatorRequestObserver
         => services.AddSingleton<IMediatorRequestObserver, TObserver>();
-    
+
     public static void AddHandler<TConsumer>(this IServiceCollection services)
         where TConsumer : IRequestHandler
     {
-        var type = typeof(TConsumer);
-        var implementedConsumers = type
-            .GetInterfaces()
-            .Where(IsGenericConsumerInterface);
-        
-        foreach(var implementedConsumer in implementedConsumers)
-        {
-            services.AddSingleton(typeof(TConsumer));
+        var type = typeof(TConsumer).BaseType;
+        if (type?.GetGenericTypeDefinition() != typeof(RequestHandler<,>))
+            throw new InvalidOperationException($"{typeof(TConsumer).Name} must inherit from abstract RequestHandler<,>");
 
-            registry.Register(                
-                typeof(TConsumer),
-                implementedConsumer.GenericTypeArguments[0],
-                implementedConsumer.GenericTypeArguments[1]);
-        }              
+        services.AddSingleton(typeof(TConsumer));
 
+        registry.Register(
+            typeof(TConsumer),
+            type.GenericTypeArguments[0],
+            type.GenericTypeArguments[1]);
     }
 
-    static bool IsGenericConsumerInterface(Type i)
-    => typeof(IRequestHandler).IsAssignableFrom(i) && i.IsConstructedGenericType;
+    static bool IsConsumerInterface(Type i)
+    => typeof(IRequestHandler).IsAssignableFrom(i);
 }

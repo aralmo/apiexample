@@ -40,7 +40,6 @@ internal class Mediator : IMediator
         Exception? exception = null;
         try
         {
-
             response = (TResponse?) await instance!.Handle(request);
             return response;
         }
