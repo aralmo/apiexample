@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 public class WeatherForecastRangeEndpoint : IGetEndpoint
 {
-    public static string Route => "/forecastrange";
+    public static string Route => "/forecastrange/{city}";
     public static Delegate Handler
     => (IMediator mediator,
         [FromQuery(Name = "from")] DateParameter dateFrom,
         [FromQuery(Name = "to")] DateParameter dateTo,
-        [FromQuery(Name = "c")] string city)
+        string city)
         => new
         {
             forecasts = Enumerable
