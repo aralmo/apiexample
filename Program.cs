@@ -1,7 +1,5 @@
 using OpenTelemetry;
 using OpenTelemetry.Resources;
-using OpenTelemetry.Instrumentation.AspNetCore;
-using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Trace;
 using Mediator.Telemetry;
 
@@ -21,6 +19,7 @@ builder.Services
         options
             .AddSource(serviceName)
             .AddConsoleExporter()
+            .AddZipkinExporter()
             .SetResourceBuilder(ResourceBuilder
                     .CreateDefault()
                     .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
@@ -28,7 +27,6 @@ builder.Services
             .AddHttpClientInstrumentation(options => { });
     })
     .StartWithHost();    
-
 
 //mediator
 builder.Services.AddHandler<RandomWeatherForecastHandler>();
